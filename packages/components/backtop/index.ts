@@ -3,4 +3,4 @@ import { withInstall } from '@tass-ui/utils/withInstall';
 
 export const TassBacktop = withInstall(backtop);
 
-export default {TassBacktop};
+export default TassBacktop;

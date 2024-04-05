@@ -13,25 +13,25 @@
       :class="{ ['tas-input--prefix']: isShowPrefixIcon }"
       placeholder="请输入内容"
       :value="inputProps.modelValue"
-      @input="changeInputVal"
       :disabled="inputProps.disabled"
       v-bind="attrs"
+      @input="changeInputVal"
     />
     <div
-      @click="clearValue"
       v-if="inputProps.clearable && isClearAbled"
       v-show="isEnter"
       class="tas-input__suffix"
+      @click="clearValue"
     >
       <tass-icon name="cross"></tass-icon>
     </div>
-    <div class="tas-input__suffix" v-show="isShowEye">
-      <tass-icon @click="changeType" :name="eyeIcon" />
+    <div v-show="isShowEye" class="tas-input__suffix">
+      <tass-icon :name="eyeIcon" @click="changeType" />
     </div>
-    <div class="tas-input__prefix" v-if="isShowPrefixIcon">
+    <div v-if="isShowPrefixIcon" class="tas-input__prefix">
       <tass-icon :name="inputProps.prefixIcon" />
     </div>
-    <div class="tas-input__suffix no-cursor" v-if="isShowSuffixIcon">
+    <div v-if="isShowSuffixIcon" class="tas-input__suffix no-cursor">
       <tass-icon :name="inputProps.suffixIcon" />
     </div>
   </div>
@@ -39,8 +39,10 @@
 <script setup lang="ts" name="TassInput">
   import '../style/';
   import { computed, ref, useAttrs } from 'vue';
+  import TassIcon from '../../icon/src/icon.vue';
+
   const attrs = useAttrs();
-  type InputProps = {
+  interface InputProps {
     modelValue?: string | number;
     disabled?: boolean;
     clearable?: boolean;
@@ -48,11 +50,11 @@
     showPassword?: boolean;
     prefixIcon?: string;
     suffixIcon?: string;
-  };
+  }
   const isClearAbled = ref(false);
-  type InputEmits = {
+  interface InputEmits {
     (e: 'update:modelValue', value: string): void;
-  };
+  }
   const inputProps = withDefaults(defineProps<InputProps>(), {
     modelValue: ''
   });

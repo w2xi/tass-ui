@@ -10,19 +10,9 @@ import { mount } from '@vue/test-utils';
 import backtop from '../src/backtop.vue';
 // The component to test
 
-describe('test backtop', () => {
-  it('should render slot', () => {
-    const wrapper = mount(backtop, {
-      slots: {
-        default: ''
-      }
-    });
-
-    // Assert the rendered text of the component
-    expect(wrapper.text()).toContain('');
-    it('should have class', () => {
-      const wrapper = mount(backtop);
-      expect(wrapper.classes()).toContain('tas-backtop');
-  });
+describe('backtop', () => {
+  it('should have class', () => {
+    const wrapper = mount(backtop);
+    expect(wrapper.classes()).toContain('tas-backtop');
   });
 });

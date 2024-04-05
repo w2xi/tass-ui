@@ -6,29 +6,74 @@
  */
 import input from '../src/input.vue';
 
-import { describe, expect, it, test } from 'vitest';
-import { mount } from '@vue/test-utils';
-const list = ['diapers', 'kleenex', 'trash bags', 'paper towels', 'milk'];
+import { describe, test, expect } from 'vitest';
+import { flushPromises, mount } from '@vue/test-utils';
 
-describe('test checkbox', () => {
-  it('should render slot', () => {
+describe('checkbox', () => {
+  test('modelValue should be updated', async () => {
     const wrapper = mount(input, {
-      slots: {
-        default: ''
+      props: {
+        modelValue: '1',
+        'onUpdate:modelValue': (e: number) => {
+          return wrapper.setProps({ modelValue: e });
+        }
       }
     });
+    await wrapper.find('input').setValue('2');
+    expect(wrapper.props('modelValue')).toBe('2');
+  });
 
-    // Assert the rendered text of the component
-    expect(wrapper.text()).toContain('');
-    it('should have class', () => {
-      const wrapper = mount(input);
-      expect(wrapper.classes()).toContain('tas-input');
+  test('disabled', async () => {
+    const wrapper = mount(input, {
+      props: {
+        disabled: true
+      }
     });
-    });
-});
+    expect(wrapper.classes()).toContain('is-disabled');
+    expect(wrapper.find('.tas-input__inner').attributes()).toHaveProperty('disabled');
 
-test('the shopping list has milk on it', () => {
-  expect(list).toContain('milk');
-  expect(new Set(list)).toContain('milk');
-  
+    await wrapper.setProps({ disabled: false });
+
+    expect(wrapper.classes()).not.toContain('is-disabled');
+    expect(wrapper.find('.tas-input__inner').attributes()).not.toHaveProperty('disabled');
+  });
+
+  test('size', () => {
+    ['medium', 'mini'].forEach(size => {
+      const wrapper = mount(input, {
+        props: {
+          size
+        }
+      });
+      expect(wrapper.find(`.tas-input--${size}`).exists()).toBe(true);
+    });
+  });
+
+  test('showPassword', async () => {
+    const wrapper = mount(input, {
+      props: {
+        showPassword: true
+      }
+    });
+    await flushPromises();
+    expect(wrapper.find('.tas-input__inner').attributes('type')).toBe('password');
+  });
+
+  test('prefixIcon', () => {
+    const wrapper = mount(input, {
+      props: {
+        prefixIcon: true
+      }
+    });
+    expect(wrapper.find('.tas-input__prefix').exists()).toBe(true);
+  });
+
+  test('prefixIcon', () => {
+    const wrapper = mount(input, {
+      props: {
+        suffixIcon: true
+      }
+    });
+    expect(wrapper.find('.tas-input__suffix').exists()).toBe(true);
+  });
 });
