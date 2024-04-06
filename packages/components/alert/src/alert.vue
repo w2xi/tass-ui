@@ -7,30 +7,31 @@
 -->
 <template>
   <!-- 提示框组件 -->
-  <Transition name="tas-alert-fade">
-    <div :class="alertClassNames" class="tas-alert" v-if="isShow">
-      <tass-icon :name="iconName" class="tas-alert__icon" v-if="showIcon" />
+  <transition name="tas-alert-fade">
+    <div v-if="isShow" :class="alertClassNames" class="tas-alert">
+      <tass-icon v-if="showIcon" :name="iconName" class="tas-alert__icon" />
       <div class="tas-alert__content">
         <h3 class="tas-alert__title tas-global-ellipsis">
           {{ title }}
         </h3>
-        <p class="tas-alert__desc" v-if="content">
+        <p v-if="content" class="tas-alert__desc">
           {{ content }}
         </p>
         <tass-icon
+          v-if="closeable"
           name="cross"
           class="tas-alert__close-btn"
-          v-if="closeable"
           @click="handltaslose"
         />
       </div>
     </div>
-  </Transition>
+  </transition>
 </template>
 <script lang="ts" name="TassAlert" setup>
   import '../style/';
-  import { AlertType } from './interface';
+  import type { AlertType } from './interface';
   import { computed, ref } from 'vue';
+  import TassIcon from '../../icon';
 
   const isShow = ref(true);
   const props = defineProps({
@@ -60,15 +61,13 @@
       default: false
     }
   });
-  const emit=defineEmits(['close'])
+  const emit = defineEmits(['close']);
   const alertClassNames = computed(() => {
     const { type, center } = props;
     return [{ [`tas-alert--${type}`]: type }, { 'is-center': center }];
   });
-  interface IiconMaps{
-    [key:string]:string
-  }
-  const iconMaps:IiconMaps = {
+  type IiconMaps = Record<string, string>;
+  const iconMaps: IiconMaps = {
     info: 'info',
     success: 'success',
     error: 'danger',
@@ -81,6 +80,6 @@
   // 关闭alert
   const handltaslose = () => {
     isShow.value = false;
-    emit("close")
+    emit('close');
   };
 </script>
